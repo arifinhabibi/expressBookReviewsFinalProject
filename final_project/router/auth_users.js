@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 let books = require("./booksdb.js");
 const regd_users = express.Router();
 const bcrypt = require("bcrypt");
+const jwtsecret = require("./jwt_secret.js").jwtsecret;
 
 let users = [];
 
@@ -49,6 +50,10 @@ regd_users.post("/login", (req, res) => {
           jwtsecret,
           { expiresIn: "1h" }
         );
+        req.session.authorization = {
+          accessToken: user.token,
+          username: user.username,
+        };
       }
     });
     return res.status(200).json({ message: "Customer Successfully log in" });
@@ -61,7 +66,16 @@ regd_users.post("/login", (req, res) => {
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
   //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  const user = req.user;
+
+  return res.status(200).json({
+    message: user,
+  });
+});
+
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+  // Write your code here
+  const user = req.user;
 });
 
 module.exports.authenticated = regd_users;

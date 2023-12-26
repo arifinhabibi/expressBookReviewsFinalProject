@@ -3,11 +3,14 @@ let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
-
+const bcrypt = require("bcrypt");
 
 public_users.post("/register", (req, res) => {
   //Write your code here
   const payload = req.body;
+  if (isValid(payload.username)) {
+    return res.status(404).json({ message: "User already exists!" });
+  }
   payload.password = bcrypt.hashSync(payload.password, 16);
   payload.token = null;
   users.push(payload);
