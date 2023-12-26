@@ -1,3 +1,3 @@
 # coding-project-template
 
-This is my project assignment to course at coursera by ibm
+This is my project assignment for a course at coursera by ibm
