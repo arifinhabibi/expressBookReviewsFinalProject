@@ -56,7 +56,7 @@ regd_users.post("/login", (req, res) => {
         };
       }
     });
-    return res.status(200).json({ message: "Customer Successfully log in" });
+    return res.status(200).json({ message: "Customer Successfully logged in" });
   } else {
     console.log(users);
     return res.status(401).json({ message: "Your password is wrong!" });
@@ -67,15 +67,33 @@ regd_users.post("/login", (req, res) => {
 regd_users.put("/auth/review/:isbn", (req, res) => {
   //Write your code here
   const user = req.user;
+  const query = req.query;
+  const isbn = req.params.isbn;
 
-  return res.status(200).json({
-    message: user,
-  });
+  const payload = {
+    review: query.review,
+    created_at: new Date(),
+  };
+
+  books[isbn].reviews[user.username] = payload;
+
+  return res
+    .status(200)
+    .send(`The review for the book with ISBN ${isbn} has been added/updated`);
 });
 
 regd_users.delete("/auth/review/:isbn", (req, res) => {
   // Write your code here
   const user = req.user;
+  const isbn = req.params.isbn;
+
+  delete books[isbn].reviews[user.username];
+
+  return res
+    .status(200)
+    .send(
+      `Reviews for the ISBN ${isbn} posted by the user ${user.username} deleted`
+    );
 });
 
 module.exports.authenticated = regd_users;
